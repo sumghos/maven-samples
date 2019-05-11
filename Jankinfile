@@ -1,0 +1,24 @@
+node {
+def app
+stage ('clone repo'){
+checkout scm
+}
+stage('Build Image ')
+{
+app= docker.build("neo2sumitghosh/image12")
+}
+stage('Test image')
+{
+app.inside {
+echo "test passed"
+}
+}
+stage('push images ')
+{
+docker.withRegistry('http://registry.hub.docker','docker-hub'){
+app.push("${env.BUILD_NUMBER}")
+app.push("least")
+}
+echo "trying to push docker Build to docker hub "
+}
+}
